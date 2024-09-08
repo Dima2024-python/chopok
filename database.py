@@ -28,6 +28,5 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 
-
 def create_tables():
     Base.metadata.create_all(engine)
