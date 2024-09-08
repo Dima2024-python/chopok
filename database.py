@@ -1,7 +1,8 @@
+import uuid
 from datetime import datetime
 
 import config
-from sqlalchemy import Column, DateTime, Float, Integer, Text, create_engine, String
+from sqlalchemy import Column, DateTime, Float, Integer, Text, create_engine, String, Sequence, UUID, Boolean
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 Base = declarative_base()
@@ -24,6 +25,20 @@ class Products(Base):
                 f' product expiration date: {self.start_product_expiration_date} -> {self.end_product_expiration_date}')
 
     __repr__ = __str__
+
+
+class User(Base):
+    __tablename__ = 'Users'
+
+    id = Column(Integer, Sequence("user_id_seq"), primary_key=True)
+    name = Column(String, index=True)
+    email = Column(String, unique=True)
+    hashed_password = Column(String)
+    user_uuid = Column(UUID, default=uuid.uuid4)
+    is_verified = Column(Boolean, default=False)
+    is_admin = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
 
 engine = create_engine(config.DB_PATH, echo=config.DEBUG)

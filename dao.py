@@ -1,4 +1,7 @@
-from database import Products, session
+import uuid
+
+from database import Products, session, User
+from utils.utils_hashlib import get_password_hash
 
 
 def create_product(
@@ -52,3 +55,35 @@ def get_products_by_name(name: str) -> list[Products]:
 def delete_product(product_id) -> None:
     session.query(Products).filter(Products.id == product_id).delete()
     session.commit()
+
+
+def create_user(name: str, email: str, password: str) -> User:
+    user = User(
+        name=name,
+        email=email,
+        hashed_password=get_password_hash(password),
+    )
+    session.add(user)
+    session.commit()
+    return user
+
+
+def get_user_by_email(email: str) -> User | None:
+    query = session.query(User).filter(User.email == email).first()
+    return query
+
+
+def get_user_by_uuid(user_uuid: uuid.UUID) -> User | None:
+    query = session.query(User).filter(User.user_uuid == user_uuid).first()
+    return query
+
+
+def activate_account(user: User) -> User:
+    if user.is_verified:
+        return user
+
+    user.is_verified = True
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user
