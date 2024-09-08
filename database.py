@@ -1,5 +1,7 @@
+from datetime import datetime
+
 import config
-from sqlalchemy import Column, DateTime, Float, Integer, Text, create_engine
+from sqlalchemy import Column, DateTime, Float, Integer, Text, create_engine, String
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 Base = declarative_base()
@@ -12,8 +14,10 @@ class Products(Base):
     product_name = Column(Text, nullable=False)
     price = Column(Float, nullable=False)
     product_class = Column(Text, nullable=False)
-    start_product_expiration_date = Column(DateTime, nullable=False)
-    end_product_expiration_date = Column(DateTime, nullable=False)
+    quantity = Column(Integer, nullable=False)
+    start_product_expiration_date = Column(DateTime, default=datetime.now)
+    end_product_expiration_date = Column(DateTime, )
+    image = Column(String, nullable=False)
 
     def __str__(self):
         return (f'Product ==> name:{self.product_name}; price: {self.price};'
