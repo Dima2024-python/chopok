@@ -1,11 +1,9 @@
 from datetime import datetime
 
-from fastapi import Path, HTTPException, APIRouter
+from fastapi import APIRouter
 from pydantic import BaseModel, Field, HttpUrl
-from starlette import status
 
 import dao
-from database import Products
 
 api_products_router = APIRouter(tags=['Products'])
 
